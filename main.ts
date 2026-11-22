@@ -1,80 +1,46 @@
-// SOLMARIS V4 fix: README badges linked, transcript touch.
-// SOLMARIS — entrypoint (stdlib-only).
-// Run with `node main.ts` (Node >= 22 type-stripping) or just open index.html.
-// This script NEVER deletes any directory. It only verifies the game files
-// exist and, optionally, serves them locally for playtesting.
+// SOLMARIS V4 gate-fix: restructure to the bounty layout.
+// The game is this directory's game/ folder, plain static files a desktop
+// browser loads offline (game/index.html and its ES modules, no library and
+// no network request at runtime), and this program hands it in: it copies
+// game/ and screenshots/ from beside this file to the output directory and
+// writes /output/dossier.json, the summary the judge reads, with the
+// vendored make.fun library (vendor/makefun-game.ts, the kit's copy).
 //
-// Usage:
-//   node main.ts            -> verify files, print how to play
-//   node main.ts --serve    -> verify files, then serve on http://127.0.0.1:8123
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as http from "node:http";
-import { fileURLToPath } from "node:url";
+// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
+//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+//
+// This program never deletes the output directory itself (or anything in
+// it): it only creates directories, copies files in, and writes dossier.json.
 
-const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
+import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { buildDossier } from './vendor/makefun-game.ts';
 
-const REQUIRED: string[] = [
-  "index.html",
-  "README.md",
-  "LICENSE",
-  "game/main.js",
-  "game/world.js",
-  "game/entities.js",
-  "game/missions.js",
-  "game/save.js",
-  "game/audio.js",
-  "game/input.js",
-];
+const here = fileURLToPath(new URL('.', import.meta.url));
+const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-const MIME: Record<string, string> = {
-  ".html": "text/html; charset=utf-8",
-  ".js": "text/javascript; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".json": "application/json; charset=utf-8",
-  ".md": "text/markdown; charset=utf-8",
-  ".svg": "image/svg+xml",
-};
-
-function checkFiles(): string[] {
-  const missing: string[] = [];
-  for (const rel of REQUIRED) {
-    const p: string = path.join(__dirname, rel);
-    if (!fs.existsSync(p)) missing.push(rel);
-  }
-  return missing;
+mkdirSync(out, { recursive: true });
+cpSync(join(here, 'game'), join(out, 'game'), { recursive: true });
+mkdirSync(join(out, 'screenshots'), { recursive: true });
+if (existsSync(join(here, 'screenshots'))) {
+  cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
 }
 
-function main(): void {
-  const missing: string[] = checkFiles();
-  if (missing.length > 0) {
-    console.error("SOLMARIS: missing files: " + missing.join(", "));
-    process.exitCode = 1;
-    return;
-  }
-  console.log("SOLMARIS — all " + REQUIRED.length + " game files present.");
-  console.log("Play: open index.html in a browser, or run: node main.ts --serve");
+// The scorer's own caps (reference/gate.json): only text_max_bytes shapes the
+// bytes; the others refuse an entry the scorer would refuse (more than 4
+// screenshots or one over 256 KiB; more than 993 files in game/ or 48 MiB of
+// game files, in all, or a path under game/ over 1000 bytes: game/ counts
+// beside /output's own 1000-entry cap, its screenshots/ and dossier.json).
+writeFileSync(
+  join(out, 'dossier.json'),
+  buildDossier(out, {
+    text_max_bytes: 163840,
+    screenshots: { max: 4, max_bytes: 262144 },
+    game_max_files: 993,
+    game_max_bytes: 50331648,
+    game_path_max_bytes: 1000,
+  }),
+);
 
-  if (!process.argv.includes("--serve")) return;
-
-  const server = http.createServer((req, res) => {
-    const urlPath: string = decodeURIComponent((req.url || "/").split("?")[0]);
-    const rel: string = urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, "");
-    const safe: string = path.normalize(rel).replace(/^(\.\.(\/|\\|$))+/, "");
-    const filePath: string = path.join(__dirname, safe);
-    if (!filePath.startsWith(__dirname)) {
-      res.writeHead(403); res.end("forbidden"); return;
-    }
-    fs.readFile(filePath, (err, data) => {
-      if (err) { res.writeHead(404); res.end("not found"); return; }
-      const ext: string = path.extname(filePath);
-      res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
-      res.end(data);
-    });
-  });
-  server.listen(8123, "127.0.0.1", () => {
-    console.log("SOLMARIS serving at http://127.0.0.1:8123 — press Ctrl+C to stop.");
-  });
-}
-
-main();
+console.log('SOLMARIS — game/ + screenshots/ copied to ' + out + ', dossier.json written.');
