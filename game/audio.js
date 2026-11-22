@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — procedural WebAudio: engine, siren, gunshot, pickup, UI blips.
 // No audio files, no network. Everything is synthesized with oscillators + noise.
 export class SoundEngine {

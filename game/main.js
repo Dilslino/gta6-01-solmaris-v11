@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — main game: loop, rendering (2.5D canvas), HUD, wanted, shop, missions.
 // Vanilla JS, ES modules, no external dependencies, no network.
 import { buildWorld, WORLD_W, WORLD_H, DISTRICTS, ROADS_H, ROADS_V, ROAD_W, LANDMARKS, collideBuildings, clampWorld, pointOnRoad, inBeach, inWater, inPark } from './world.js';

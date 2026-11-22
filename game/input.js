@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — keyboard input state.
 export class Input {
   constructor() {

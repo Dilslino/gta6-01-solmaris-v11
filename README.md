@@ -1,8 +1,8 @@
 # SOLMARIS — Open-World Crime (GTA 6 inspired)
 
-![make.fun](https://make.fun/badge/gta6-01.svg)
-![rank](https://make.fun/badge/gta6-01/Dilslino/gta6-01-solmaris-v11/rank.svg)
-![reward](https://make.fun/badge/gta6-01/Dilslino/gta6-01-solmaris-v11/reward.svg)
+[![make.fun · gta6-01](https://make.fun/badge/gta6-01.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![rank](https://make.fun/badge/gta6-01/Dilslino/gta6-01-solmaris-v11/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
+[![reward](https://make.fun/badge/gta6-01/Dilslino/gta6-01-solmaris-v11/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
 Bounty: https://make.fun/bounty/gta6-01?ref=5548afh3
 

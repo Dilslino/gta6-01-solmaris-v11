@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — world generation: Leonida coastal city.
 // Grid roads, districts, beach, bridge, park, docks. All procedural, no assets.
 export const WORLD_W = 3400;

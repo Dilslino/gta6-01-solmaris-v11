@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — save / economy: localStorage persistence + shop catalogue.
 const KEY = 'solmaris_save_v11';
 

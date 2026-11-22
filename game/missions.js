@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — 5 missions with objective tracker, timers and cash rewards.
 import { LANDMARKS } from './world.js';
 import { dist } from './entities.js';

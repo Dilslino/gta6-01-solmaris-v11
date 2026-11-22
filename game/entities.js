@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: transcript touch.
 // SOLMARIS — entities: player, cars (traffic / parked / police), pedestrians.
 import { collideBuildings, clampWorld, pointOnRoad, WORLD_W, WORLD_H, ROADS_H, ROADS_V } from './world.js';
 

@@ -1,3 +1,4 @@
+// SOLMARIS V4 fix: README badges linked, transcript touch.
 // SOLMARIS — entrypoint (stdlib-only).
 // Run with `node main.ts` (Node >= 22 type-stripping) or just open index.html.
 // This script NEVER deletes any directory. It only verifies the game files
